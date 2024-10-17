@@ -1,5 +1,6 @@
 import User from '../models/user.model';
 import { IUser } from '../interfaces/user.interface';
+import bcrypt from 'bcrypt';
 
 class UserService {
   // Create new user
@@ -9,6 +10,10 @@ class UserService {
     if (existingUser) {
       throw new Error('User already exists'); // Logic moved here
     }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(body.password, 10);
+    body.password = hashedPassword; // Store the hashed password
 
     // Create a new user
     const data = await User.create(body);
@@ -25,8 +30,9 @@ class UserService {
       throw new Error('Invalid email or password');
     }
 
-    // Check if the password matches
-    if (user.password !== password) {
+    // Compare the provided password with the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
       throw new Error('Invalid email or password');
     }
 
