@@ -10,7 +10,7 @@ import userRoute from './user.route';
  */
 const routes = (): IRouter => {
   router.get('/', (req, res) => {
-    res.json('Welcome');
+    res.json('Welcome to fundoo notes');
   });
   router.use('/users', new userRoute().getRoutes());
 
