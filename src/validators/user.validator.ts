@@ -4,13 +4,18 @@ import { Request, Response, NextFunction } from 'express';
 class UserValidator {
   public newUser = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
-      name: Joi.string().min(4).required()
+      firstName: Joi.string().min(2).max(30).required(),
+      lastName: Joi.string().min(2).max(30).required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).required()
     });
+
     const { error } = schema.validate(req.body);
     if (error) {
-      next(error);
+      return next(error); // Pass the validation error to the next middleware
     }
-    next();
+
+    next(); // Proceed to the next middleware if validation is successful
   };
 }
 
