@@ -28,6 +28,29 @@ class UserController {
       next(error); // Pass the error to the next middleware
     }
   };
+
+  /**
+   * Controller to log in a user
+   * @param  {object} req - request object
+   * @param {object} res - response object
+   * @param {Function} next - next function
+   */
+  public loginUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try {
+      const data = await this.UserService.loginUser(req.body);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: data,
+        message: 'Login successful'
+      });
+    } catch (error) {
+      next(error); // Pass the error to the next middleware
+    }
+  };
 }
 
 export default UserController;
