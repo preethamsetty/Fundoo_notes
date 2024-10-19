@@ -1,6 +1,7 @@
 import User from '../models/user.model';
 import { IUser } from '../interfaces/user.interface';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 class UserService {
   // Create new user
@@ -21,7 +22,7 @@ class UserService {
   };
 
   // Log in user
-  public loginUser = async (body: { email: string; password: string }): Promise<IUser> => {
+  public loginUser = async (body: { email: string; password: string }): Promise<{ token: string; user: IUser }> => {
     const { email, password } = body;
 
     // Check if user exists
@@ -36,9 +37,11 @@ class UserService {
       throw new Error('Invalid email or password');
     }
 
-    return user; // Return the user object if login is successful
-  };
+    // Generate JWT
+    const token = jwt.sign({ userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
 
+    return { token, user }; // Return the token and user object if login is successful
+  };
 }
 
 export default UserService;
