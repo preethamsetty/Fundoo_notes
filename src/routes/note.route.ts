@@ -33,6 +33,9 @@ class NoteRoutes {
 
     // Route to restore a note from trash
     this.router.patch('/restore/:id', userAuth, this.noteController.restoreNote);
+
+    // Route to permanently delete a note
+    this.router.delete('/delete/:id', userAuth, this.noteController.deleteNoteForever);
   };
 
   public getRoutes = (): IRouter => {
