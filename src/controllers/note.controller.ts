@@ -102,6 +102,52 @@ class NoteController {
     }
   };
 
+  // Controller to move a note to trash
+  public trashNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const noteId = req.params.id;
+      const userId = res.locals.user; // Get the user ID from the JWT
+      const data = await this.noteService.trashNote(noteId, userId);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data,
+        message: 'Note moved to trash successfully'
+      });
+    } catch (error) {
+      // Handle the specific error for archived notes
+      if (error.message === 'Note not found or it is archived. Cannot move to trash.') {
+        res.status(HttpStatus.BAD_REQUEST).json({
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message
+        });
+      }
+      next(error); // For other errors
+    }
+  };
+
+  // Controller to restore a note from trash
+  public restoreNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const noteId = req.params.id;
+      const userId = res.locals.user; // Get the user ID from the JWT
+      const data = await this.noteService.restoreNote(noteId, userId);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data,
+        message: 'Note restored successfully'
+      });
+    } catch (error) {
+      // Handle the specific error for notes not found in trash
+      if (error.message === 'Note not found or it is not in trash. Cannot restore.') {
+        res.status(HttpStatus.BAD_REQUEST).json({
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message
+        });
+      }
+      next(error); // For other errors
+    }
+  };
+
 
 }
 

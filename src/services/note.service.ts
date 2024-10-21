@@ -45,6 +45,43 @@ class NoteService {
     return note;
   };
 
+  // Service to move a note to trash
+  public trashNote = async (noteId: string, userId: string): Promise<INote | null> => {
+    // Check if the note exists and is not archived
+    const note = await Note.findOne({ _id: noteId, createdBy: userId, isArchive: false });
+    
+    if (!note) {
+      throw new Error('Note not found or it is archived. Cannot move to trash.');
+    }
+
+    // Move the note to trash
+    const trashedNote = await Note.findOneAndUpdate(
+      { _id: noteId, createdBy: userId },
+      { isTrash: true },
+      { new: true }
+    );
+    return trashedNote;
+  };
+
+  // Service to restore a note from trash
+  public restoreNote = async (noteId: string, userId: string): Promise<INote | null> => {
+    // Check if the note exists and is in trash
+    const note = await Note.findOne({ _id: noteId, createdBy: userId, isTrash: true });
+
+    if (!note) {
+      throw new Error('Note not found or it is not in trash. Cannot restore.');
+    }
+
+    // Restore the note by updating the isTrash field
+    const restoredNote = await Note.findOneAndUpdate(
+      { _id: noteId, createdBy: userId },
+      { isTrash: false },
+      { new: true }
+    );
+
+    return restoredNote;
+  };
+
   // Service to get a note by ID
   public getNoteById = async (noteId: string, userId: string): Promise<INote | null> => {
     const note = await Note.findOne({ _id: noteId, createdBy: userId });

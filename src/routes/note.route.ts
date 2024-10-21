@@ -27,6 +27,12 @@ class NoteRoutes {
 
     // Unarchive a note
     this.router.put('/unarchive/:id', userAuth, this.noteController.unarchiveNote);
+
+    // Route to move a note to trash
+    this.router.patch('/trash/:id', userAuth, this.noteController.trashNote);
+
+    // Route to restore a note from trash
+    this.router.patch('/restore/:id', userAuth, this.noteController.restoreNote);
   };
 
   public getRoutes = (): IRouter => {
