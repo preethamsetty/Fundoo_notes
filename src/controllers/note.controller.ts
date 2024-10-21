@@ -38,6 +38,23 @@ class NoteController {
     }
   };
 
+  // Controller to update a note
+  public updateNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const noteId = req.params.id;
+      const userId = res.locals.user;
+      const data = await this.noteService.updateNote(noteId, req.body, userId);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data,
+        message: 'Note updated successfully'
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
 
 }
 

@@ -18,6 +18,13 @@ class NoteService {
     return notes;
   };
 
+   // Service to update a note
+   public updateNote = async (noteId: string, body: INote, userId: string): Promise<INote | null> => {
+    const note = await Note.findOneAndUpdate({ _id: noteId, createdBy: userId }, body, { new: true });
+    return note;
+  };
+
+
 }
 
 export default NoteService;

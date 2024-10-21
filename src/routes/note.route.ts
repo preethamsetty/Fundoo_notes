@@ -16,7 +16,11 @@ class NoteRoutes {
     // Route to create a new note
     this.router.post('/create', userAuth, this.noteValidator.validateNote, this.noteController.createNote);
 
-  this.router.get('/', userAuth, this.noteController.getAllNotes);
+    // Route to get all Notes of a user
+    this.router.get('/', userAuth, this.noteController.getAllNotes);
+
+    // Route to update a note
+    this.router.put('/:id', userAuth, this.noteValidator.validateNote, this.noteController.updateNote);
 
   };
 
