@@ -23,6 +23,22 @@ class NoteController {
     }
   };
 
+  // Controller to get all notes for a user
+  public getAllNotes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = res.locals.user;
+      const data = await this.noteService.getAllNotes(userId);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data,
+        message: 'Notes fetched successfully'
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
 }
 
 export default NoteController;

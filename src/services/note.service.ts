@@ -12,6 +12,12 @@ class NoteService {
     return note;
   };
 
+  // Service to get all notes for a user
+  public getAllNotes = async (userId: string): Promise<INote[]> => {
+    const notes = await Note.find({ createdBy: userId });
+    return notes;
+  };
+
 }
 
 export default NoteService;
