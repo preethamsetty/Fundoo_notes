@@ -24,6 +24,34 @@ class NoteService {
     return note;
   };
 
+  // Service to archive a note
+  public archiveNote = async (noteId: string, userId: string): Promise<INote | null> => {
+    const note = await Note.findOneAndUpdate(
+      { _id: noteId, createdBy: userId },
+      { isArchive: true },
+      { new: true }
+    );
+    console.log("Archieved note:",note)
+    return note;
+  };
+
+  // Service to unarchive a note
+  public unarchiveNote = async (noteId: string, userId: string): Promise<INote | null> => {
+    const note = await Note.findOneAndUpdate(
+      { _id: noteId, createdBy: userId },
+      { isArchive: false },
+      { new: true }
+    );
+    return note;
+  };
+
+  // Service to get a note by ID
+  public getNoteById = async (noteId: string, userId: string): Promise<INote | null> => {
+    const note = await Note.findOne({ _id: noteId, createdBy: userId });
+    return note;
+  };
+
+
 
 }
 
