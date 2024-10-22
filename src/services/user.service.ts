@@ -28,6 +28,7 @@ class UserService {
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("hello")      
       throw new Error('Invalid email or password');
     }
 
@@ -38,7 +39,7 @@ class UserService {
     }
 
     // Generate JWT
-    const token = jwt.sign({user:{ _id: user._id,email: user.email}}, 'your-secret-key');
+    const token = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.JWT_SECRET);
 
     return { token, user }; // Return the token and user object if login is successful
   };

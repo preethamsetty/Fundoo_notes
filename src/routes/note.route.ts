@@ -25,17 +25,11 @@ class NoteRoutes {
     // Route to update a note
     this.router.put('/update/:id', userAuth, this.noteValidator.validateNote, this.noteController.updateNote);
 
-    // Route to archive a note
-    this.router.put('/archive/:id', userAuth, this.noteController.archiveNote);
+    // Route to toggle archive/unarchive
+    this.router.put('/archive/:id', userAuth, this.noteController.ArchiveNote);
 
-    // Unarchive a note
-    this.router.put('/unarchive/:id', userAuth, this.noteController.unarchiveNote);
-
-    // Route to move a note to trash
-    this.router.patch('/trash/:id', userAuth, this.noteController.trashNote);
-
-    // Route to restore a note from trash
-    this.router.patch('/restore/:id', userAuth, this.noteController.restoreNote);
+    // Route to toggle trash/restore
+    this.router.put('/trash/:id', userAuth, this.noteController.TrashNote);
 
     // Route to permanently delete a note
     this.router.delete('/delete/:id', userAuth, this.noteController.deleteNoteForever);

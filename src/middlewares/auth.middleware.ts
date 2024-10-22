@@ -25,9 +25,7 @@ export const userAuth = async (
       };
     bearerToken = bearerToken.split(' ')[1];
 
-    const decoded: any = await jwt.verify(bearerToken, 'your-secret-key');
-    console.log('Decoded user',decoded);
-    console.log(decoded.user._id);
+    const decoded: any = await jwt.verify(bearerToken, process.env.JWT_SECRET);
     res.locals.user = decoded.user._id;
  
     res.locals.token = bearerToken;

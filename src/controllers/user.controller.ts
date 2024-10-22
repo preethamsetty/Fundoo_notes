@@ -29,7 +29,7 @@ class UserController {
         message: 'Login successful'
       });
     } catch (error) {
-      next(error); // Pass the error to the next middleware
+      res.status(HttpStatus.UNAUTHORIZED).send(error.message);
     }
   };
 
