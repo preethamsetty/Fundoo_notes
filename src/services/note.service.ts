@@ -18,6 +18,13 @@ class NoteService {
     return notes;
   };
 
+  // Service to get a note by its ID
+public getNoteById = async (noteId: string, userId: string): Promise<INote | null> => {
+  const note = await Note.findOne({ _id: noteId, createdBy: userId });
+  return note;
+};
+
+
    // Service to update a note
    public updateNote = async (noteId: string, body: INote, userId: string): Promise<INote | null> => {
     const note = await Note.findOneAndUpdate({ _id: noteId, createdBy: userId }, body, { new: true });
@@ -45,24 +52,25 @@ class NoteService {
     return note;
   };
 
-  // Service to move a note to trash
+  // Service to move a note to trash (archived notes can also be moved)
   public trashNote = async (noteId: string, userId: string): Promise<INote | null> => {
-    // Check if the note exists and is not archived
-    const note = await Note.findOne({ _id: noteId, createdBy: userId, isArchive: false });
-    
+    // Find the note to make sure it exists
+    const note = await Note.findOne({ _id: noteId, createdBy: userId });
+
     if (!note) {
-      throw new Error('Note not found or it is archived. Cannot move to trash.');
+      throw new Error('Note not found.');
+    }
+    // Mark the note as trashed
+    note.isTrash = true;
+
+    // If the note is archived, allow it to be moved to the trash without deleting it forever
+    if (note.isArchive) {
+      note.isArchive = false;  // Unarchive the note when it is moved to the trash
     }
 
-    // Move the note to trash
-    const trashedNote = await Note.findOneAndUpdate(
-      { _id: noteId, createdBy: userId },
-      { isTrash: true },
-      { new: true }
-    );
-    return trashedNote;
+    await note.save();
+    return note;
   };
-
   // Service to restore a note from trash
   public restoreNote = async (noteId: string, userId: string): Promise<INote | null> => {
     // Check if the note exists and is in trash
@@ -80,12 +88,6 @@ class NoteService {
     );
 
     return restoredNote;
-  };
-
-  // Service to get a note by ID
-  public getNoteById = async (noteId: string, userId: string): Promise<INote | null> => {
-    const note = await Note.findOne({ _id: noteId, createdBy: userId });
-    return note;
   };
 
   // Service to delete a note permanently

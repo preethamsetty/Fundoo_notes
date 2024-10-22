@@ -38,7 +38,7 @@ class UserService {
     }
 
     // Generate JWT
-    const token = jwt.sign({user:{ _id: user._id,email: user.email}}, 'your-secret-key', { expiresIn: '1h' });
+    const token = jwt.sign({user:{ _id: user._id,email: user.email}}, 'your-secret-key');
 
     return { token, user }; // Return the token and user object if login is successful
   };

@@ -15,7 +15,7 @@ class NoteController {
       const data = await this.noteService.createNote(req.body, userId);
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
-        data,
+      
         message: 'Note created successfully'
       });
     } catch (error) {
@@ -30,13 +30,38 @@ class NoteController {
       const data = await this.noteService.getAllNotes(userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data,
         message: 'Notes fetched successfully'
       });
     } catch (error) {
       next(error);
     }
   };
+
+  // Controller to get a note by its ID
+public getNoteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const noteId = req.params.id;
+    const userId = res.locals.user; // Get the user ID from the JWT
+
+    const data = await this.noteService.getNoteById(noteId, userId);
+    if (!data) {
+      res.status(HttpStatus.NOT_FOUND).json({
+        code: HttpStatus.NOT_FOUND,
+        message: 'Note not found'
+      });
+      return;
+    }
+
+    res.status(HttpStatus.OK).json({
+      code: HttpStatus.OK,
+      data,
+      message: 'Note fetched successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
   // Controller to update a note
   public updateNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -47,7 +72,7 @@ class NoteController {
       const data = await this.noteService.updateNote(noteId, req.body, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data,
+        
         message: 'Note updated successfully'
       });
     } catch (error) {
@@ -78,7 +103,7 @@ class NoteController {
       const data = await this.noteService.archiveNote(noteId, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data,
+        
         message: 'Note archived successfully'
       });
     } catch (error) {
@@ -94,7 +119,7 @@ class NoteController {
       const data = await this.noteService.unarchiveNote(noteId, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data,
+        
         message: 'Note unarchived successfully'
       });
     } catch (error) {
@@ -102,26 +127,26 @@ class NoteController {
     }
   };
 
-  // Controller to move a note to trash
+  /// Controller to move a note to trash (even if archived)
   public trashNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const noteId = req.params.id;
       const userId = res.locals.user; // Get the user ID from the JWT
+
       const data = await this.noteService.trashNote(noteId, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data,
-        message: 'Note moved to trash successfully'
+        message: 'Note moved to trash successfully (unarchived if it was archived).'
       });
     } catch (error) {
-      // Handle the specific error for archived notes
-      if (error.message === 'Note not found or it is archived. Cannot move to trash.') {
-        res.status(HttpStatus.BAD_REQUEST).json({
-          code: HttpStatus.BAD_REQUEST,
+      // Handle specific errors
+      if (error.message === 'Note not found.') {
+        res.status(HttpStatus.NOT_FOUND).json({
+          code: HttpStatus.NOT_FOUND,
           message: error.message
         });
       }
-      next(error); // For other errors
+      next(error);
     }
   };
 
@@ -133,7 +158,7 @@ class NoteController {
       const data = await this.noteService.restoreNote(noteId, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data,
+        
         message: 'Note restored successfully'
       });
     } catch (error) {

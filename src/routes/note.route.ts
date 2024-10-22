@@ -19,8 +19,11 @@ class NoteRoutes {
     // Route to get all Notes of a user
     this.router.get('/', userAuth, this.noteController.getAllNotes);
 
+    // Route to get a note by its ID
+     this.router.get('/:id', userAuth, this.noteController.getNoteById);
+
     // Route to update a note
-    this.router.put('/:id', userAuth, this.noteValidator.validateNote, this.noteController.updateNote);
+    this.router.put('/update/:id', userAuth, this.noteValidator.validateNote, this.noteController.updateNote);
 
     // Route to archive a note
     this.router.put('/archive/:id', userAuth, this.noteController.archiveNote);
