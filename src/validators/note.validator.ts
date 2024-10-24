@@ -48,7 +48,7 @@ class NoteValidator {
       color: Joi.string().optional(),
       isArchive: Joi.boolean().optional(),
       isTrash: Joi.boolean().optional(),
-      createdBy: Joi.string().required(), // Assuming createdBy is an ObjectId as a string
+      createdBy: Joi.string().optional() // Assuming createdBy is an ObjectId as a string
     });
 
     const { error } = schema.validate(req.body);

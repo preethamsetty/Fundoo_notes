@@ -3,6 +3,13 @@ const router = express.Router();
 
 import userRoute from './user.route';
 import noteRoute from './note.route';  // Import the note route
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../swagger/openapi.json';
+
+// Set up the Swagger documentation route
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+console.log('Swagger Docs available at /api-docs');
 
 /**
  * Function contains Application routes

@@ -27,6 +27,8 @@
     "mailgun-js": "^0.22.0",
     "mongoose": "^5.10.2",
     "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "ts-node-dev": "^1.0.0-pre.62",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0"
