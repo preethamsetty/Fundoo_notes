@@ -43,6 +43,33 @@ class UserService {
 
     return { token, user }; // Return the token and user object if login is successful
   };
+
+  // Forget password service
+  public forgetPassword = async (email: string): Promise<string> => {
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET1, { expiresIn: '1h' });
+
+    return token;
+  };
+
+  // Reset password service
+  public resetPassword = async (token: string, newPassword: string): Promise<void> => {
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET1);
+    const userId = decoded.userId;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('Invalid or expired token');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+  };
 }
 
 export default UserService;

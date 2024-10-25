@@ -18,7 +18,11 @@ const userSchema = new Schema(
     password:{
       type:String,
       required:true
-    }
+    },
+    resetPasswordToken: { // Optional: Store reset token
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true

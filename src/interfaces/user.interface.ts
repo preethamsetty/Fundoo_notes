@@ -6,4 +6,5 @@ export interface IUser extends Document {
   lastName:string;
   email:string;
   password:string;
+  resetPasswordToken?: string;
 }

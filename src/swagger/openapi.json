@@ -77,6 +77,80 @@
           }
         }
       },
+      "/users/forget-password": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Send password reset token to user's email",
+        "requestBody": {
+          "description": "Email of the user requesting password reset",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset token sent successfully"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/reset-password": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Reset the user's password using the token",
+        "requestBody": {
+          "description": "New password and the reset token",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                },
+                "required": ["token", "newPassword"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
       "/notes/create": {
         "post": {
           "tags": ["Notes"],

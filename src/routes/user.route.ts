@@ -19,6 +19,12 @@ class UserRoutes {
 
     //route to login
     this.router.post('/login',this.UserValidator.userlogin,this.UserController.loginUser);
+
+    // Forget password route
+    this.router.post('/forget-password', this.UserController.forgetPassword);
+
+    // Reset password route
+    this.router.post('/reset-password', this.UserController.resetPassword);
   };
 
   public getRoutes = (): IRouter => {
