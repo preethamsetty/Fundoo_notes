@@ -51,16 +51,13 @@ class UserService {
       throw new Error('User not found');
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET1, { expiresIn: '1h' });
+    const token = jwt.sign({user:{ _id: user._id }}, process.env.JWT_SECRET1);
 
     return token;
   };
 
   // Reset password service
-  public resetPassword = async (token: string, newPassword: string): Promise<void> => {
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET1);
-    const userId = decoded.userId;
-
+  public resetPassword = async (newPassword, userId): Promise<void> => {
     const user = await User.findById(userId);
     if (!user) {
       throw new Error('Invalid or expired token');

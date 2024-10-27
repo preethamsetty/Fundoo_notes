@@ -117,20 +117,22 @@
         "summary": "Reset the user's password using the token",
         "requestBody": {
           "description": "New password and the reset token",
+          "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "token": {
-                    "type": "string"
-                  },
                   "newPassword": {
                     "type": "string"
                   }
                 },
-                "required": ["token", "newPassword"]
+                "required": ["newPassword"]
               }
             }
           }
@@ -148,7 +150,12 @@
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+      {
+        "BearerAuth": []
+      }
+    ]
       }
     },
       "/notes/create": {
@@ -179,7 +186,7 @@
           },
           "security": [
             {
-              "JWT": []
+              "BearerAuth": []
             }
           ]
         }
@@ -201,7 +208,7 @@
           },
           "security": [
             {
-              "JWT": []
+              "BearerAuth": []
             }
           ]
         }
@@ -233,7 +240,7 @@
           },
           "security": [
             {
-              "JWT": []
+              "BearerAuth": []
             }
           ]
         }
@@ -279,7 +286,7 @@
           },
           "security": [
             {
-              "JWT": []
+              "BearerAuth": []
             }
           ]
         }
@@ -311,7 +318,7 @@
           },
           "security": [
             {
-              "JWT": []
+              "BearerAuth": []
             }
           ]
         }
@@ -343,7 +350,7 @@
           },
           "security": [
             {
-              "JWT": []
+              "BearerAuth": []
             }
           ]
         }
@@ -375,7 +382,7 @@
           },
           "security": [
             {
-              "JWT": []
+              "BearerAuth": []
             }
           ]
         }
@@ -429,15 +436,16 @@
             "isTrash": {
               "type": "boolean"
             }
-          }
+          },
+          "required": ["title", "description", "color"]
         }
       },
       "securitySchemes": {
-        "JWT": {
-          "type": "apiKey",
-          "name": "Authorization",
-          "in": "header"
-        }
+        "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
       }
     }
   }

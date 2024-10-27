@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import userController from '../controllers/user.controller';
 import userValidator from '../validators/user.validator';
-import { userAuth } from '../middlewares/auth.middleware';
+import { passwordResetAuth } from '../middlewares/auth.middleware';
 
 class UserRoutes {
   private UserController = new userController();
@@ -24,7 +24,7 @@ class UserRoutes {
     this.router.post('/forget-password', this.UserController.forgetPassword);
 
     // Reset password route
-    this.router.post('/reset-password', this.UserController.resetPassword);
+    this.router.post('/reset-password', passwordResetAuth,this.UserController.resetPassword);
   };
 
   public getRoutes = (): IRouter => {

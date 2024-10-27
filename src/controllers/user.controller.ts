@@ -55,8 +55,16 @@ class UserController {
   // Reset password
   public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
-      const { token, newPassword } = req.body;
-      await this.UserService.resetPassword(token, newPassword);
+      const token = req.header('Authorization')?.split(' ')[1];
+      const { newPassword } = req.body;
+      if (!token) {
+        return res.status(HttpStatus.UNAUTHORIZED).json({
+          code: HttpStatus.UNAUTHORIZED,
+          message: 'Authorization token is required'
+        });
+      }
+      const userId = res.locals.user; // Get the user ID from the JWT
+      await this.UserService.resetPassword(newPassword,userId);
 
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
