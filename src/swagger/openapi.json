@@ -435,9 +435,13 @@
             },
             "isTrash": {
               "type": "boolean"
+            },
+            "createdBy": {
+              "type": "string"
             }
+
           },
-          "required": ["title", "description", "color"]
+          "required": ["title", "description", "color","createdBy"]
         }
       },
       "securitySchemes": {
