@@ -15,7 +15,7 @@ class NoteController {
       const data = await this.noteService.createNote(req.body, userId);
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
-      
+        data,
         message: 'Note created successfully'
       });
     } catch (error) {
@@ -136,53 +136,6 @@ public TrashNote = async (req: Request, res: Response, next: NextFunction): Prom
     }
   }
 };
-
-
-  // /// Controller to move a note to trash (even if archived)
-  // public trashNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  //   try {
-  //     const noteId = req.params.id;
-  //     const userId = res.locals.user; // Get the user ID from the JWT
-
-  //     const data = await this.noteService.trashNote(noteId, userId);
-  //     res.status(HttpStatus.OK).json({
-  //       code: HttpStatus.OK,
-  //       message: 'Note moved to trash successfully (unarchived if it was archived).'
-  //     });
-  //   } catch (error) {
-  //     // Handle specific errors
-  //     if (error.message === 'Note not found.') {
-  //       res.status(HttpStatus.NOT_FOUND).json({
-  //         code: HttpStatus.NOT_FOUND,
-  //         message: error.message
-  //       });
-  //     }
-  //     next(error);
-  //   }
-  // };
-
-  // // Controller to restore a note from trash
-  // public restoreNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  //   try {
-  //     const noteId = req.params.id;
-  //     const userId = res.locals.user; // Get the user ID from the JWT
-  //     const data = await this.noteService.restoreNote(noteId, userId);
-  //     res.status(HttpStatus.OK).json({
-  //       code: HttpStatus.OK,
-        
-  //       message: 'Note restored successfully'
-  //     });
-  //   } catch (error) {
-  //     // Handle the specific error for notes not found in trash
-  //     if (error.message === 'Note not found or it is not in trash. Cannot restore.') {
-  //       res.status(HttpStatus.BAD_REQUEST).json({
-  //         code: HttpStatus.BAD_REQUEST,
-  //         message: error.message
-  //       });
-  //     }
-  //     next(error); // For other errors
-  //   }
-  // };
 
   // Controller to delete a note permanently
   public deleteNoteForever = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
