@@ -4,11 +4,14 @@
     "module": "commonjs",
     "allowJs": true,
     "outDir": "./build",
-    "rootDir": "./src",
+    "rootDir": ".",
     "esModuleInterop": true,
     "noImplicitAny": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "src/tests"]
+  "include": ["src/**/*", "tests/**/*.ts"],
+  "exclude": ["node_modules"]
 }

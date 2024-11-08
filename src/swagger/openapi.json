@@ -1,0 +1,456 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Fundoo Notes API",
+      "description": "API documentation for the Fundoo Notes project, providing user authentication and note management features.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8000/api/v1"
+      }
+    ],
+    "tags": [
+      {
+        "name": "User",
+        "description": "Operations related to user authentication"
+      },
+      {
+        "name": "Notes",
+        "description": "Operations related to note management"
+      }
+    ],
+    "paths": {
+      "/users/register": {
+        "post": {
+          "tags": ["User"],
+          "summary": "Register a new user",
+          "requestBody": {
+            "description": "Details of the user to register",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User registered successfully"
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          }
+        }
+      },
+      "/users/login": {
+        "post": {
+          "tags": ["User"],
+          "summary": "Log in an existing user",
+          "requestBody": {
+            "description": "User login credentials",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Login"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User logged in successfully"
+            },
+            "401": {
+              "description": "Invalid email or password"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          }
+        }
+      },
+      "/users/forget-password": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Send password reset token to user's email",
+        "requestBody": {
+          "description": "Email of the user requesting password reset",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset token sent successfully"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/reset-password": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Reset the user's password using the token",
+        "requestBody": {
+          "description": "New password and the reset token",
+          "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newPassword": {
+                    "type": "string"
+                  }
+                },
+                "required": ["newPassword"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+      {
+        "BearerAuth": []
+      }
+    ]
+      }
+    },
+      "/notes/create": {
+        "post": {
+          "tags": ["Notes"],
+          "summary": "Create a new note",
+          "requestBody": {
+            "description": "Details of the note to create",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Note created successfully"
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/notes": {
+        "get": {
+          "tags": ["Notes"],
+          "summary": "Get all notes for the authenticated user",
+          "responses": {
+            "200": {
+              "description": "Notes retrieved successfully"
+            },
+            "404": {
+              "description": "No notes found"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/notes/{id}": {
+        "get": {
+          "tags": ["Notes"],
+          "summary": "Get a note by its ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Note retrieved successfully"
+            },
+            "404": {
+              "description": "Note not found"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/notes/update/{id}": {
+        "put": {
+          "tags": ["Notes"],
+          "summary": "Update a note by its ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Updated note details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Note updated successfully"
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "Note not found"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/notes/delete/{id}": {
+        "delete": {
+          "tags": ["Notes"],
+          "summary": "Delete a note by its ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Note deleted successfully"
+            },
+            "404": {
+              "description": "Note not found"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/notes/archive/{id}": {
+        "put": {
+          "tags": ["Notes"],
+          "summary": "Toggle the archive status of a note",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Note archive status toggled successfully"
+            },
+            "404": {
+              "description": "Note not found"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/notes/trash/{id}": {
+        "put": {
+          "tags": ["Notes"],
+          "summary": "Toggle the trash status of a note",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Note trash status toggled successfully"
+            },
+            "404": {
+              "description": "Note not found"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "Login": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "Note": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            },
+            "isArchive": {
+              "type": "boolean"
+            },
+            "isTrash": {
+              "type": "boolean"
+            },
+            "createdBy": {
+              "type": "string"
+            }
+
+          },
+          "required": ["title", "description", "color","createdBy"]
+        }
+      },
+      "securitySchemes": {
+        "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+      }
+    }
+  }
+  
