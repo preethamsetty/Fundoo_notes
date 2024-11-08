@@ -157,15 +157,6 @@ describe('User APIs Test', () => {
       expect(res.status).to.equal(200);
       expect(res.body).to.have.property('message', 'Note moved to trash successfully'); // Adjust according to your API response
     });
-
-    // it('should restore the trashed note successfully', async () => {
-    //   const res = await request(app.getApp())
-    //     .put(`/api/v1/notes/trash/${createdNoteId}`)
-    //     .set('Authorization', `Bearer ${token}`);
-
-    //   expect(res.status).to.equal(200);
-    //   expect(res.body).to.have.property('message', 'Note restored successfully'); // Adjust according to your API response
-    // });
   });
 
   describe('Delete Note Forever', () => {

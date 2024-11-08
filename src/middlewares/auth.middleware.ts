@@ -27,7 +27,7 @@ const Auth = (secret_token:string)=>{
     bearerToken = bearerToken.split(' ')[1];
 
     const decoded: any = await jwt.verify(bearerToken, secret_token);
-    console.log(decoded);
+    //console.log(decoded);
     res.locals.user = decoded.user._id;
  
     res.locals.token = bearerToken;

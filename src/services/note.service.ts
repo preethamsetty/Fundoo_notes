@@ -1,5 +1,6 @@
 import Note from '../models/note.model';
 import { INote } from '../interfaces/note.interface';
+import redisClient from '../utils/redisClient';
 
 class NoteService {
   // Service to create a new note
@@ -9,6 +10,8 @@ class NoteService {
       createdBy: userId
     };
     const note = await Note.create(noteData);
+    // Clear the cache for the user's notes list
+    await redisClient.del(`notes:${userId}`);
     return note;
   };
 
@@ -27,6 +30,11 @@ class NoteService {
   // Service to update a note
    public updateNote = async (noteId: string, body: INote, userId: string): Promise<INote | null> => {
    const note = await Note.findOneAndUpdate({ _id: noteId, createdBy: userId }, body, { new: true });
+   if (note) {
+    // Clear cache for all notes and this specific note
+    await redisClient.del(`notes:${userId}`);
+    await redisClient.del(`note:${userId}:${noteId}`);
+  }
    return note;
   };
 
@@ -41,6 +49,10 @@ class NoteService {
 
   note.isArchive = !note.isArchive;
   await note.save();
+
+   // Clear cache after toggling archive status
+   await redisClient.del(`notes:${userId}`);
+   await redisClient.del(`note:${userId}:${noteId}`);
 
   return note;
 };
@@ -61,6 +73,10 @@ class NoteService {
   note.isTrash = !note.isTrash;
   await note.save();
 
+  // Clear cache after toggling trash status
+  await redisClient.del(`notes:${userId}`);
+  await redisClient.del(`note:${userId}:${noteId}`);
+
   return note;
 };
 
@@ -75,6 +91,10 @@ class NoteService {
 
     // Delete the note permanently
     await Note.deleteOne({ _id: noteId, createdBy: userId });
+
+    // Clear cache for the user's notes list and the specific note
+    await redisClient.del(`notes:${userId}`);
+    await redisClient.del(`note:${userId}:${noteId}`);
     return note; // Optionally return the deleted note information
   };
 

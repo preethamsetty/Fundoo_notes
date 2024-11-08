@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import HttpStatus from 'http-status-codes';
 import NoteService from '../services/note.service';
-
+import redisClient from '../utils/redisClient';
 
 class NoteController {
   private noteService = new NoteService();
@@ -36,6 +36,8 @@ class NoteController {
           message: 'No notes present for the user'
         });
       }
+
+      await redisClient.setEx(`notes:${userId}`, 3600, JSON.stringify(data)); // Cache for 1 hour
       
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
@@ -62,6 +64,8 @@ public getNoteById = async (req: Request, res: Response, next: NextFunction): Pr
       return;
     }
 
+    await redisClient.setEx(`note:${userId}:${noteId}`, 3600, JSON.stringify(data)); // Cache for 1 hour
+    
     res.status(HttpStatus.OK).json({
       code: HttpStatus.OK,
       data,
