@@ -2,6 +2,7 @@ import User from '../models/user.model';
 import { IUser } from '../interfaces/user.interface';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { createChannel } from '../utils/rabbitmqClient';
 
 class UserService {
   // Create new user
@@ -18,8 +19,19 @@ class UserService {
 
     // Create a new user
     const data = await User.create(body);
+
+    // Send message to RabbitMQ
+    const message = {fname: data.firstName ,lname:data.lastName, email: data.email, };
+    await this.sendMessageToQueue('user_registration_queue', message);
     return data;
   };
+  // Function to send message to RabbitMQ
+  private async sendMessageToQueue(queueName: string, message: any) {
+    const channel = await createChannel();
+    await channel.assertQueue(queueName, { durable: true });
+    channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
+    console.log('Sent message to queue:', queueName, message);
+  }
 
   // Log in user
   public loginUser = async (body: { email: string; password: string }): Promise<{ token: string; user: IUser }> => {
