@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import HttpStatus from 'http-status-codes';
 import Logger from '../config/logger';
 import { Request, Response, NextFunction } from 'express';
@@ -15,7 +11,6 @@ class ErrorMiddleware {
 
   /**
    * Error response middleware for 404 not found.
-   *
    * @param {Object} req
    * @param {Object} res
    */

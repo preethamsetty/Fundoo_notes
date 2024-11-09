@@ -10,7 +10,7 @@ class NoteService {
       createdBy: userId
     };
     const note = await Note.create(noteData);
-    // Clear the cache for the user's notes list
+    // Clearing the cache for the user's notes list
     await redisClient.del(`notes:${userId}`);
     return note;
   };
@@ -31,7 +31,7 @@ class NoteService {
    public updateNote = async (noteId: string, body: INote, userId: string): Promise<INote | null> => {
    const note = await Note.findOneAndUpdate({ _id: noteId, createdBy: userId }, body, { new: true });
    if (note) {
-    // Clear cache for all notes and this specific note
+    // Clearing cache for all notes and this specific note
     await redisClient.del(`notes:${userId}`);
     await redisClient.del(`note:${userId}:${noteId}`);
   }
@@ -50,7 +50,7 @@ class NoteService {
   note.isArchive = !note.isArchive;
   await note.save();
 
-   // Clear cache after toggling archive status
+   // Clearing cache after toggling archive status
    await redisClient.del(`notes:${userId}`);
    await redisClient.del(`note:${userId}:${noteId}`);
 
@@ -65,7 +65,6 @@ class NoteService {
     throw new Error('Note not found');
   }
 
-  // Prevent moving to trash if the note is archived
   if (note.isArchive) {
     throw new Error('Note is archived and cannot be trashed. Unarchive it first.');
   }
@@ -73,7 +72,7 @@ class NoteService {
   note.isTrash = !note.isTrash;
   await note.save();
 
-  // Clear cache after toggling trash status
+  // Clearing cache after toggling trash status
   await redisClient.del(`notes:${userId}`);
   await redisClient.del(`note:${userId}:${noteId}`);
 
@@ -95,9 +94,8 @@ class NoteService {
     // Clear cache for the user's notes list and the specific note
     await redisClient.del(`notes:${userId}`);
     await redisClient.del(`note:${userId}:${noteId}`);
-    return note; // Optionally return the deleted note information
+    return note; 
   };
 
 }
-
 export default NoteService;

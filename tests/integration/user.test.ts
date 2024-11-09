@@ -49,7 +49,7 @@ describe('User APIs Test', () => {
     isTrash: false,
   };
 
-  let token: string; // For storing token generated during login
+  let token: string; 
   let createdNoteId:string;
 
   describe('User Registration', () => {
@@ -71,7 +71,7 @@ describe('User APIs Test', () => {
         console.log('Login Response:', res.body);
 
       expect(res.status).to.equal(200);
-      expect(res.body.data).to.have.property('token'); // Check for the token presence
+      expect(res.body.data).to.have.property('token'); 
       token = res.body.data.token;
     });
   });
@@ -92,12 +92,12 @@ describe('User APIs Test', () => {
     it('should create a new note successfully', async () => {
       const res = await request(app.getApp())
         .post('/api/v1/notes/create')
-        .set('Authorization', `Bearer ${token}`) // Set the Authorization header with the token
+        .set('Authorization', `Bearer ${token}`) 
         .send(noteData);
       console.log(res.body);
       expect(res.status).to.equal(201);
-      expect(res.body).to.have.property('message', 'Note created successfully'); // Adjust according to your API response
-      createdNoteId = res.body.data._id; // Store the created note ID for further tests
+      expect(res.body).to.have.property('message', 'Note created successfully'); 
+      createdNoteId = res.body.data._id; 
     });
   });
 
@@ -114,7 +114,7 @@ describe('User APIs Test', () => {
 
   describe('Get Note by ID', () => {
     it('should return a note by its ID', async () => {
-      const noteId = createdNoteId // Get the ID of the created note
+      const noteId = createdNoteId 
 
       const res = await request(app.getApp())
         .get(`/api/v1/notes/${noteId}`)
@@ -133,7 +133,7 @@ describe('User APIs Test', () => {
         .send(updatedNoteData);
 
       expect(res.status).to.equal(200);
-      expect(res.body).to.have.property('message', 'Note updated successfully'); // Adjust according to your API response
+      expect(res.body).to.have.property('message', 'Note updated successfully'); 
     });
   });
 
@@ -144,7 +144,7 @@ describe('User APIs Test', () => {
         .set('Authorization', `Bearer ${token}`);
       console.log(res.body);
       expect(res.status).to.equal(200);
-      expect(res.body).to.have.property('message', 'Note unarchived successfully'); // Adjust according to your API response
+      expect(res.body).to.have.property('message', 'Note unarchived successfully'); 
     });
   });
 
@@ -155,7 +155,7 @@ describe('User APIs Test', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).to.equal(200);
-      expect(res.body).to.have.property('message', 'Note moved to trash successfully'); // Adjust according to your API response
+      expect(res.body).to.have.property('message', 'Note moved to trash successfully'); 
     });
   });
 
@@ -166,7 +166,7 @@ describe('User APIs Test', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).to.equal(200);
-      expect(res.body).to.have.property('message', 'Note deleted permanently'); // Adjust according to your API response
+      expect(res.body).to.have.property('message', 'Note deleted permanently'); 
     });
   });
 });

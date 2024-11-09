@@ -13,10 +13,9 @@ class UserValidator {
 
     const { error } = schema.validate(req.body);
     if (error) {
-      return next(error); // Pass the validation error to the next middleware
+      return next(error); 
     }
-
-    next(); // Proceed to the next middleware if validation is successful
+    next(); 
   };
 
   //validation for login
@@ -28,10 +27,10 @@ class UserValidator {
 
     const { error } = schema.validate(req.body);
     if (error) {
-      return next(error); // Pass the validation error to the next middleware
+      return next(error); 
     }
 
-    next(); // Proceed to the next middleware if validation is successful
+    next(); 
   }
 
   // Validate email for forget password

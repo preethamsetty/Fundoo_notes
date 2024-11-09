@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix"
   },
-  "author": "Tolustar",
+  "author": "Preetham B S",
   "license": "MIT",
   "dependencies": {
     "@hapi/joi": "^17.1.1",

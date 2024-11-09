@@ -10,15 +10,15 @@ class NoteValidator {
       color: Joi.string().optional(),
       isArchive: Joi.boolean().optional(),
       isTrash: Joi.boolean().optional(),
-      createdBy: Joi.string().required() // Make sure to validate the user ID properly
+      createdBy: Joi.string().required() 
     });
 
     const { error } = schema.validate(req.body);
     if (error) {
-      return next(error); // Pass the validation error to the next middleware
+      return next(error); 
     }
 
-    next(); // Proceed to the next middleware if validation is successful
+    next(); 
   };
 
   // Validation for updating a note
@@ -29,15 +29,14 @@ class NoteValidator {
       color: Joi.string().optional(),
       isArchive: Joi.boolean().optional(),
       isTrash: Joi.boolean().optional(),
-      createdBy: Joi.string().optional() // Make sure this is optional for updates
+      createdBy: Joi.string().optional()
     });
 
     const { error } = schema.validate(req.body);
     if (error) {
-      return next(error); // Pass the validation error to the next middleware
+      return next(error); 
     }
-
-    next(); // Proceed to the next middleware if validation is successful
+    next(); 
   };
   
   // Validation for creating and updating a note
@@ -48,15 +47,14 @@ class NoteValidator {
       color: Joi.string().optional(),
       isArchive: Joi.boolean().optional(),
       isTrash: Joi.boolean().optional(),
-      createdBy: Joi.string().optional() // Assuming createdBy is an ObjectId as a string
+      createdBy: Joi.string().optional() 
     });
 
     const { error } = schema.validate(req.body);
     if (error) {
-      return next(error); // Pass the validation error to the next middleware
+      return next(error); 
     }
-
-    next(); // Proceed to the next middleware if validation is successful
+    next(); 
   };
 }
 

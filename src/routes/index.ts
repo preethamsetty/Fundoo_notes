@@ -2,7 +2,7 @@ import express, { IRouter } from 'express';
 const router = express.Router();
 
 import userRoute from './user.route';
-import noteRoute from './note.route';  // Import the note route
+import noteRoute from './note.route';  
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger/openapi.json';
 
@@ -26,7 +26,7 @@ const routes = (): IRouter => {
   router.use('/users', new userRoute().getRoutes());
 
   // Note routes
-  router.use('/notes', new noteRoute().getRoutes());  // Add the note routes
+  router.use('/notes', new noteRoute().getRoutes());  
 
   return router;
 };

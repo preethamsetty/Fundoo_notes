@@ -9,7 +9,7 @@ class NoteController {
   // Controller to create a new note
   public createNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = res.locals.user;  // Get the user ID from the JWT
+      const userId = res.locals.user;  
       console.log(userId);
       
       const data = await this.noteService.createNote(req.body, userId);
@@ -29,7 +29,7 @@ class NoteController {
       const userId = res.locals.user;
       const data = await this.noteService.getAllNotes(userId);
       console.log(data.length)
-      if (data.length === 0) {  // Check if the notes array is empty
+      if (data.length === 0) {  
         console.log(0);
         res.status(HttpStatus.NOT_FOUND).json({
           code: HttpStatus.NOT_FOUND,
@@ -37,7 +37,7 @@ class NoteController {
         });
       }
 
-      await redisClient.setEx(`notes:${userId}`, 3600, JSON.stringify(data)); // Cache for 1 hour
+      await redisClient.setEx(`notes:${userId}`, 3600, JSON.stringify(data)); 
       
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
@@ -53,7 +53,7 @@ class NoteController {
 public getNoteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const noteId = req.params.id;
-    const userId = res.locals.user; // Get the user ID from the JWT
+    const userId = res.locals.user; 
 
     const data = await this.noteService.getNoteById(noteId, userId);
     if (!data) {
@@ -64,7 +64,7 @@ public getNoteById = async (req: Request, res: Response, next: NextFunction): Pr
       return;
     }
 
-    await redisClient.setEx(`note:${userId}:${noteId}`, 3600, JSON.stringify(data)); // Cache for 1 hour
+    await redisClient.setEx(`note:${userId}:${noteId}`, 3600, JSON.stringify(data)); 
     
     res.status(HttpStatus.OK).json({
       code: HttpStatus.OK,
@@ -86,7 +86,6 @@ public getNoteById = async (req: Request, res: Response, next: NextFunction): Pr
       const data = await this.noteService.updateNote(noteId, req.body, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        
         message: 'Note updated successfully'
       });
     } catch (error) {
@@ -129,14 +128,13 @@ public TrashNote = async (req: Request, res: Response, next: NextFunction): Prom
       message
     });
   } catch (error) {
-    // Specific error handling for archived notes that cannot be trashed
     if (error.message === 'Note is archived and cannot be trashed. Unarchive it first.') {
       res.status(HttpStatus.BAD_REQUEST).json({
         code: HttpStatus.BAD_REQUEST,
         message: error.message
       });
     } else {
-      next(error); // For other errors
+      next(error); 
     }
   }
 };
@@ -145,7 +143,7 @@ public TrashNote = async (req: Request, res: Response, next: NextFunction): Prom
   public deleteNoteForever = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const noteId = req.params.id;
-      const userId = res.locals.user; // Get the user ID from the JWT
+      const userId = res.locals.user; 
       const data = await this.noteService.deleteNoteForever(noteId, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
@@ -160,11 +158,9 @@ public TrashNote = async (req: Request, res: Response, next: NextFunction): Prom
           message: error.message
         });
       }
-      next(error); // For other errors
+      next(error); 
     }
   };
-
-
 }
 
 export default NoteController;

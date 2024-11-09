@@ -6,5 +6,5 @@ export interface INote extends Document {
   color: string;
   isArchive: boolean;
   isTrash: boolean;
-  createdBy: Types.ObjectId; // Ensure it's ObjectId if Mongoose expects it
+  createdBy: Types.ObjectId; 
 }

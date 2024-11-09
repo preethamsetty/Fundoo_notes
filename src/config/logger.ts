@@ -2,9 +2,7 @@ import winston, { format } from 'winston';
 import 'winston-daily-rotate-file';
 
 class Logger {
-  /**
-   * Logger handles all logs in the application
-   */
+
   static logger = winston.createLogger({
     format: format.combine(format.timestamp(), format.simple()),
     transports: [
@@ -33,15 +31,7 @@ class Logger {
   });
 
   static logStream = {
-    /**
-     * A writable stream for winston logger.
-     *
-     * @param {any} message
-     */
     write(message) {
-      /**
-       * morganLogger logs all http request in a dedicated file and on console
-       */
       const morganLogger = winston.createLogger({
         format: format.combine(format.simple()),
         transports: [

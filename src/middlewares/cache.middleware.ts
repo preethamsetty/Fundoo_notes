@@ -1,4 +1,3 @@
-// middlewares/cache.middleware.ts
 import { Request, Response, NextFunction } from 'express';
 import redisClient from '../utils/redisClient';
 import HttpStatus from 'http-status-codes';

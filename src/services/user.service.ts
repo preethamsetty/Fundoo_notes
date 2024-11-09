@@ -10,7 +10,7 @@ class UserService {
     // Check if user already exists
     const existingUser = await User.findOne({ email: body.email });
     if (existingUser) {
-      throw new Error('User already exists'); // Logic moved here
+      throw new Error('User already exists'); 
     }
 
     // Hash the password
@@ -20,7 +20,7 @@ class UserService {
     // Create a new user
     const data = await User.create(body);
 
-    // Send message to RabbitMQ
+    // Sending message to RabbitMQ
     const message = {fname: data.firstName ,lname:data.lastName, email: data.email, };
     await this.sendMessageToQueue('user_registration_queue', message);
     return data;
@@ -44,7 +44,7 @@ class UserService {
       throw new Error('Invalid email or password');
     }
 
-    // Compare the provided password with the hashed password
+    // Comparing the provided password with the hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new Error('Invalid email or password');
@@ -53,7 +53,7 @@ class UserService {
     // Generate JWT
     const token = jwt.sign({user:{ _id: user._id,email: user.email}}, process.env.JWT_SECRET);
 
-    return { token, user }; // Return the token and user object if login is successful
+    return { token, user }; 
   };
 
   // Forget password service

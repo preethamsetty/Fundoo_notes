@@ -19,7 +19,7 @@ const userSchema = new Schema(
       type:String,
       required:true
     },
-    resetPasswordToken: { // Optional: Store reset token
+    resetPasswordToken: { 
       type: String,
       required: false,
     },

@@ -22,9 +22,9 @@ const noteSchema = new Schema(
       default: false,
     },
     createdBy: {
-      type: mongoose.Schema.Types.ObjectId, // Ensure this matches the type of your User model
+      type: mongoose.Schema.Types.ObjectId, 
       required: true,
-      ref: 'User', // Reference to the User model
+      ref: 'User', 
     },
   },
   {

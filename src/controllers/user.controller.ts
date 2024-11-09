@@ -16,7 +16,7 @@ class UserController {
         message: 'User registered successfully'
       });
     } catch (error) {
-      next(error); // Pass the error to the next middleware
+      next(error); 
     }
   };
 
@@ -26,7 +26,7 @@ class UserController {
       const { token, user } = await this.UserService.loginUser(req.body);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data: { user, token }, // Return the user and token
+        data: { user, token }, 
         message: 'Login successful'
       });
     } catch (error) {
@@ -40,7 +40,7 @@ class UserController {
       const { email } = req.body;
       const token = await this.UserService.forgetPassword(email);
 
-      // Send token via email
+      // Sending token via email
       await sendEmail(email, token);
 
       res.status(HttpStatus.OK).json({
@@ -63,7 +63,7 @@ class UserController {
           message: 'Authorization token is required'
         });
       }
-      const userId = res.locals.user; // Get the user ID from the JWT
+      const userId = res.locals.user; 
       await this.UserService.resetPassword(newPassword,userId);
 
       res.status(HttpStatus.OK).json({
