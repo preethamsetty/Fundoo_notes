@@ -189,9 +189,7 @@
               "BearerAuth": []
             }
           ]
-        }
-      },
-      "/notes/": {
+        },
         "get": {
           "tags": ["Notes"],
           "summary": "Get all notes for the authenticated user",
@@ -243,9 +241,7 @@
               "BearerAuth": []
             }
           ]
-        }
-      },
-      "/notes/{id}": {
+        },
         "put": {
           "tags": ["Notes"],
           "summary": "Update a note by its ID",
@@ -289,9 +285,7 @@
               "BearerAuth": []
             }
           ]
-        }
-      },
-      "/notes/{id}": {
+        },
         "delete": {
           "tags": ["Notes"],
           "summary": "Delete a note by its ID",
@@ -323,7 +317,7 @@
           ]
         }
       },
-      "/notes/archive/{id}": {
+      "/notes/{id}/archive": {
         "put": {
           "tags": ["Notes"],
           "summary": "Toggle the archive status of a note",
@@ -355,7 +349,7 @@
           ]
         }
       },
-      "/notes/trash/{id}": {
+      "/notes/{id}/trash": {
         "put": {
           "tags": ["Notes"],
           "summary": "Toggle the trash status of a note",
@@ -426,22 +420,9 @@
             },
             "description": {
               "type": "string"
-            },
-            "color": {
-              "type": "string"
-            },
-            "isArchive": {
-              "type": "boolean"
-            },
-            "isTrash": {
-              "type": "boolean"
-            },
-            "createdBy": {
-              "type": "string"
             }
-
           },
-          "required": ["title", "description", "color","createdBy"]
+          "required": ["title", "description"]
         }
       },
       "securitySchemes": {

@@ -18,7 +18,7 @@ class NoteRoutes {
     this.router.post('', userAuth, this.noteValidator.validateNote, this.noteController.createNote);
 
     // Route to get all Notes of a user
-    this.router.get('/', userAuth,cacheNotes, this.noteController.getAllNotes);
+    this.router.get('', userAuth,cacheNotes, this.noteController.getAllNotes);
 
     // Route to get a note by its ID
      this.router.get('/:id', userAuth,cacheNoteById, this.noteController.getNoteById);
