@@ -21,7 +21,7 @@
       }
     ],
     "paths": {
-      "/users/register": {
+      "/users": {
         "post": {
           "tags": ["User"],
           "summary": "Register a new user",
@@ -158,7 +158,7 @@
     ]
       }
     },
-      "/notes/create": {
+      "/notes": {
         "post": {
           "tags": ["Notes"],
           "summary": "Create a new note",
@@ -191,7 +191,7 @@
           ]
         }
       },
-      "/notes": {
+      "/notes/": {
         "get": {
           "tags": ["Notes"],
           "summary": "Get all notes for the authenticated user",
@@ -245,7 +245,7 @@
           ]
         }
       },
-      "/notes/update/{id}": {
+      "/notes/{id}": {
         "put": {
           "tags": ["Notes"],
           "summary": "Update a note by its ID",
@@ -291,7 +291,7 @@
           ]
         }
       },
-      "/notes/delete/{id}": {
+      "/notes/{id}": {
         "delete": {
           "tags": ["Notes"],
           "summary": "Delete a note by its ID",

@@ -10,8 +10,6 @@ class NoteController {
   public createNote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = res.locals.user;  
-      console.log(userId);
-      
       const data = await this.noteService.createNote(req.body, userId);
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
@@ -28,9 +26,7 @@ class NoteController {
     try {
       const userId = res.locals.user;
       const data = await this.noteService.getAllNotes(userId);
-      console.log(data.length)
       if (data.length === 0) {  
-        console.log(0);
         res.status(HttpStatus.NOT_FOUND).json({
           code: HttpStatus.NOT_FOUND,
           message: 'No notes present for the user'
@@ -82,7 +78,6 @@ public getNoteById = async (req: Request, res: Response, next: NextFunction): Pr
     try {
       const userId = res.locals.user;
       const noteId = req.params.id;
-      console.log(req.params.id)
       const data = await this.noteService.updateNote(noteId, req.body, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
@@ -147,7 +142,7 @@ public TrashNote = async (req: Request, res: Response, next: NextFunction): Prom
       const data = await this.noteService.deleteNoteForever(noteId, userId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data,
+       // data,
         message: 'Note deleted permanently'
       });
     } catch (error) {

@@ -12,7 +12,6 @@ class UserController {
       const data = await this.UserService.registerUser(req.body);
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
-        data: data,
         message: 'User registered successfully'
       });
     } catch (error) {
@@ -26,8 +25,8 @@ class UserController {
       const { token, user } = await this.UserService.loginUser(req.body);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        data: { user, token }, 
-        message: 'Login successful'
+        token,
+        message: `${user.firstName} Logged in successfully`
       });
     } catch (error) {
       res.status(HttpStatus.UNAUTHORIZED).send(error.message);

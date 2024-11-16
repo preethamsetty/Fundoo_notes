@@ -39,45 +39,45 @@ class NoteService {
   };
 
 
-  // Service to toggle archive/unarchive
-  public toggleArchiveNote = async (noteId: string, userId: string): Promise<INote | null> => {
-  const note = await Note.findOne({ _id: noteId, createdBy: userId });
-  
-  if (!note) {
-    throw new Error('Note not found');
-  }
+   // Service to toggle archive/unarchive
+   public toggleArchiveNote = async (noteId: string, userId: string): Promise<INote | null> => {
+    const note = await Note.findOne({ _id: noteId, createdBy: userId });
 
-  note.isArchive = !note.isArchive;
-  await note.save();
+    if (!note) {
+      throw new Error('Note not found');
+    }
 
-   // Clearing cache after toggling archive status
-   await redisClient.del(`notes:${userId}`);
-   await redisClient.del(`note:${userId}:${noteId}`);
+    if (note.isTrash) {
+      throw new Error('Note is trashed and cannot be archived or unarchived. Restore it first.');
+    }
 
-  return note;
-};
+    note.isArchive = !note.isArchive; 
+    await note.save();
 
- // Service to toggle trash/restore
+    // Clearing cache after toggling archive status
+    await redisClient.del(`notes:${userId}`);
+    await redisClient.del(`note:${userId}:${noteId}`);
+
+    return note;
+  };
+
+  // Service to toggle trash/restore
   public toggleTrashNote = async (noteId: string, userId: string): Promise<INote | null> => {
-  const note = await Note.findOne({ _id: noteId, createdBy: userId });
-  
-  if (!note) {
-    throw new Error('Note not found');
-  }
+    const note = await Note.findOne({ _id: noteId, createdBy: userId });
 
-  if (note.isArchive) {
-    throw new Error('Note is archived and cannot be trashed. Unarchive it first.');
-  }
+    if (!note) {
+      throw new Error('Note not found');
+    }
 
-  note.isTrash = !note.isTrash;
-  await note.save();
+    note.isTrash = !note.isTrash; 
+    await note.save();
 
-  // Clearing cache after toggling trash status
-  await redisClient.del(`notes:${userId}`);
-  await redisClient.del(`note:${userId}:${noteId}`);
+    // Clearing cache after toggling trash status
+    await redisClient.del(`notes:${userId}`);
+    await redisClient.del(`note:${userId}:${noteId}`);
 
-  return note;
-};
+    return note;
+  };
 
   // Service to delete a note permanently
   public deleteNoteForever = async (noteId: string, userId: string): Promise<INote | null> => {

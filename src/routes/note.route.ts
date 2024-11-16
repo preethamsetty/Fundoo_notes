@@ -15,7 +15,7 @@ class NoteRoutes {
 
   private routes = (): void => {
     // Route to create a new note
-    this.router.post('/create', userAuth, this.noteValidator.validateNote, this.noteController.createNote);
+    this.router.post('', userAuth, this.noteValidator.validateNote, this.noteController.createNote);
 
     // Route to get all Notes of a user
     this.router.get('/', userAuth,cacheNotes, this.noteController.getAllNotes);
@@ -24,16 +24,17 @@ class NoteRoutes {
      this.router.get('/:id', userAuth,cacheNoteById, this.noteController.getNoteById);
 
     // Route to update a note
-    this.router.put('/update/:id', userAuth, this.noteValidator.validateNote, this.noteController.updateNote);
-
-    // Route to toggle archive/unarchive
-    this.router.put('/archive/:id', userAuth, this.noteController.ArchiveNote);
-
-    // Route to toggle trash/restore
-    this.router.put('/trash/:id', userAuth, this.noteController.TrashNote);
+    this.router.put('/:id', userAuth, this.noteValidator.validateNote, this.noteController.updateNote);
 
     // Route to permanently delete a note
-    this.router.delete('/delete/:id', userAuth, this.noteController.deleteNoteForever);
+    this.router.delete('/:id', userAuth, this.noteController.deleteNoteForever);
+
+    // Route to toggle archive/unarchive
+    this.router.put('/:id/archive', userAuth, this.noteController.ArchiveNote);
+
+    // Route to toggle trash/restore
+    this.router.put('/:id/trash', userAuth, this.noteController.TrashNote);
+
   };
 
   public getRoutes = (): IRouter => {
