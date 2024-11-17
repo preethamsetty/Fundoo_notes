@@ -55,11 +55,19 @@ describe('User APIs Test', () => {
   describe('User Registration', () => {
     it('should register a new user successfully', async () => {
       const res = await request(app.getApp())
-        .post('/api/v1/users/register')
+        .post('/api/v1/users')
         .send(userData);
 
       expect(res.status).to.equal(201);
       expect(res.body).to.have.property('message', 'User registered successfully');
+    });
+    it('should return an error if required fields are missing', async () => {
+      const res = await request(app.getApp())
+        .post('/api/v1/users')
+        .send({ email: 'test@gmail.com' });
+
+      expect(res.status).to.equal(500);
+      expect(res.body).to.have.property('message', '"firstName" is required');
     });
   });
 
@@ -68,11 +76,18 @@ describe('User APIs Test', () => {
       const res = await request(app.getApp())
         .post('/api/v1/users/login')
         .send({ email: userData.email, password: userData.password });
-        console.log('Login Response:', res.body);
 
       expect(res.status).to.equal(200);
-      expect(res.body.data).to.have.property('token'); 
-      token = res.body.data.token;
+      expect(res.body).to.have.property('token'); 
+      token = res.body.token;
+    });
+    it('should return an error for invalid credentials', async () => {
+      const res = await request(app.getApp())
+        .post('/api/v1/users/login')
+        .send({ email: userData.email, password: 'WrongPassword' });
+
+      expect(res.status).to.equal(401);
+      expect(res.text).to.equal('Invalid email or password');
     });
   });
 
@@ -82,7 +97,6 @@ describe('User APIs Test', () => {
         .post('/api/v1/users/forget-password')
         .send({ email: userData.email });
        
-      console.log(res.body);
       expect(res.status).to.equal(200);
       expect(res.body).to.have.property('message', 'Reset token sent to email successfully');
     });
@@ -91,24 +105,38 @@ describe('User APIs Test', () => {
   describe('Create Note', () => {
     it('should create a new note successfully', async () => {
       const res = await request(app.getApp())
-        .post('/api/v1/notes/create')
+        .post('/api/v1/notes')
         .set('Authorization', `Bearer ${token}`) 
         .send(noteData);
-      console.log(res.body);
       expect(res.status).to.equal(201);
       expect(res.body).to.have.property('message', 'Note created successfully'); 
       createdNoteId = res.body.data._id; 
+    });
+    it('should return an error if authorization token is missing', async () => {
+      const res = await request(app.getApp())
+        .post('/api/v1/notes')
+        .send(noteData);
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.have.property('message', 'Authorization token is required');
     });
   });
 
   describe('Get All Notes', () => {
     it('should return all notes of the user', async () => {
       const res = await request(app.getApp())
-        .get('/api/v1/notes/')
+        .get('/api/v1/notes')
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).to.equal(200);
       expect(res.body.data).to.be.an('array');
+    });
+    it('should return an error if no authorization token is provided', async () => {
+      const res = await request(app.getApp())
+        .get('/api/v1/notes');
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.have.property('message', 'Authorization token is required');
     });
   });
 
@@ -123,50 +151,85 @@ describe('User APIs Test', () => {
       expect(res.status).to.equal(200);
       expect(res.body.data).to.have.property('_id', noteId);
     });
+    it('should return an error for a non-existent note ID', async () => {
+      const res = await request(app.getApp())
+        .get('/api/v1/notes/invalidID')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(res.status).to.equal(500);
+    });
   });
 
   describe('Update Note', () => {
     it('should update a note successfully', async () => {
       const res = await request(app.getApp())
-        .put(`/api/v1/notes/update/${createdNoteId}`)
+        .put(`/api/v1/notes/${createdNoteId}`)
         .set('Authorization', `Bearer ${token}`)
         .send(updatedNoteData);
 
       expect(res.status).to.equal(200);
       expect(res.body).to.have.property('message', 'Note updated successfully'); 
     });
+    it('should return an error for unauthorized update attempt', async () => {
+      const res = await request(app.getApp())
+        .put(`/api/v1/notes/${createdNoteId}`)
+        .send(updatedNoteData);
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.have.property('message', 'Authorization token is required');
+    });
   });
 
   describe('Archive/Unarchive Note', () => {
     it('should archive a note successfully', async () => {
       const res = await request(app.getApp())
-        .put(`/api/v1/notes/archive/${createdNoteId}`)
+        .put(`/api/v1/notes/${createdNoteId}/archive`)
         .set('Authorization', `Bearer ${token}`);
-      console.log(res.body);
       expect(res.status).to.equal(200);
       expect(res.body).to.have.property('message', 'Note unarchived successfully'); 
+    });
+    it('should return an error for invalid note ID', async () => {
+      const res = await request(app.getApp())
+        .put('/api/v1/notes/invalidID/archive')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(res.status).to.equal(500);
     });
   });
 
   describe('Trash/Restore Note', () => {
     it('should trash a note successfully', async () => {
       const res = await request(app.getApp())
-        .put(`/api/v1/notes/trash/${createdNoteId}`)
+        .put(`/api/v1/notes/${createdNoteId}/trash`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).to.equal(200);
       expect(res.body).to.have.property('message', 'Note moved to trash successfully'); 
+    });
+    it('should return an error for invalid note ID', async () => {
+      const res = await request(app.getApp())
+        .put('/api/v1/notes/invalidID/trash')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(res.status).to.equal(500);
     });
   });
 
   describe('Delete Note Forever', () => {
     it('should delete a note permanently', async () => {
       const res = await request(app.getApp())
-        .delete(`/api/v1/notes/delete/${createdNoteId}`)
+        .delete(`/api/v1/notes/${createdNoteId}`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).to.equal(200);
       expect(res.body).to.have.property('message', 'Note deleted permanently'); 
     });
   });
+  it('should return an error for unauthorized deletion', async () => {
+      const res = await request(app.getApp())
+        .delete(`/api/v1/notes/${createdNoteId}`);
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.have.property('message', 'Authorization token is required');
+    });
 });
