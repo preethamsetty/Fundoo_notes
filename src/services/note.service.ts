@@ -70,6 +70,10 @@ class NoteService {
     }
 
     note.isTrash = !note.isTrash; 
+
+    if(note.isTrash){
+      note.isArchive=false
+    }
     await note.save();
 
     // Clearing cache after toggling trash status
